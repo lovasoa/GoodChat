@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf8"/>
+		<title>GoodChat</title>
+		<link rel="stylesheet" href="css/messages.css"/>
+	</head>
+	
+	<body>
+		<h1>GoodChat</h1>
+		<main id="app">
+	
+			<section class="messages">
+				<article v-for="message in messages" class="message">
+					<div class="message__text">{{message.text}}</div>
+					<div class="message__meta">
+						<span class="message__author">{{message.author}}</span>
+						<a href="#self"
+							 class="message__delete"
+							 v-on:click.prevent="deleteMessage(message)"
+							 title="Delete this message">🗑</a>
+			
+						<a href="#self"
+							 class="message__like"
+							 v-on:click.prevent="likeMessage(message)"
+							 title="Like this message">
+								👍
+							<i
+									v-if="message.likedBy.length > 0"
+									v-bind:title="'Liked by: ' + message.likedBy.join(', ')">
+								({{message.likedBy.length}})
+							</i>
+						</a>
+					</div>
+				</article>
+			</section>
+			
+			<div v-if="messages.length === 0">
+				No messages
+			</div>
+			
+			<div>
+				<form v-on:submit.prevent="send" class="newmsg">
+					<input type="text" v-model="current_text" placeholder="New message..." autofocus="true" class="newmsg__input"/>
+					<input type="submit" v-bind:disabled="current_text.length === 0" value="Send" class="newmsg__button"/>
+				</form>
+				
+				<div class="options">
+					<a href="#self" v-on:click.prevent="show_options = !show_options">Options</a>
+					<form v-show="show_options" v-on:submit.stop.prevent="show_options = false">
+						Username: <input v-on:input="setUserName" v-bind:value="getUserName()" placeholder="Name"/>
+					</form>
+				</div>
+			</div>
+			
+			 <div class="loading" v-if="false">
+				<!--Displays only while vue is loading-->
+				Loading...
+			</div>
+		</main>
+		
+		<script src="https://cdn.jsdelivr.net/g/vue@2.1.4,pouchdb@6.0.7"></script>
+		<script src="js/app.js"></script>
+	</body>
+</html>
